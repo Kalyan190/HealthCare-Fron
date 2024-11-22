@@ -45,6 +45,22 @@ const Navbar = () => {
             </div> : <button className='bg-primary text-white px-8 py-3 rounded-full hidden md:block' onClick={() => navigate('/login')}>
                Create account</button>}
 
+               <img onClick={()=>setShowmenu(true)} className='w-6 md:hidden' src={assets.menu_icon} alt="error" />
+
+               {/*---------mobile menu-------------*/ }
+               <div className={`${showmenu? 'fixed w-full': 'h-0 w-0'} md:hidden right-0 top-0 bottom-0 z-20 overflow-hidden bg-white transition-all duration-300`}>
+               <div className='flex items-center justify-between px-5 py-6 '>
+               <img className='w-36' src={assets.logo} alt="error" />
+               <img className='w-7 cursor-pointer' onClick={()=>setShowmenu(false)} src={assets.cross_icon} alt="error" />
+               </div>
+               <ul className='flex flex-col items-center gap-2 mt-5 px-5 text-lg font-medium'>
+                  <NavLink onClick={() => setShowmenu(false)} to='/'><p className='px-4 py-2 inline-block rounded'>HOME</p></NavLink>
+                  <NavLink onClick={() => setShowmenu(false)} to='/doctors'><p className='px-4 py-2 inline-block rounded' >ALL DOCTORS</p></NavLink>
+                  <NavLink onClick={() => setShowmenu(false)}  to='/about'><p className='px-4 py-2 inline-block rounded' >ABOUT</p></NavLink>
+                  <NavLink onClick={() => setShowmenu(false)} to='/contact' ><p className='px-4 py-2 inline-block rounded' >CONTACT</p></NavLink>
+               
+               </ul>
+               </div>
 
          </div>
       </div>

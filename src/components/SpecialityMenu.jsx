@@ -11,8 +11,8 @@ const SpecialityMenu = () => {
       {
          specialityData.map((item,index)=>(
             <Link key={index} to={`/doctors/${item.speciality}`} className='flex flex-col items-center text-sm cursor-pointer flex-shrink-0 hover:translate-y-[-10px] transition-all duration-500'>
-              <img className='w-16 sm:w-24 mb-2' src={item.image} alt="error" />
-              <p>{item.speciality}</p>
+              <img className='w-12 sm:w-24 mb-2' src={item.image} alt="error" />
+              <p >{item.speciality}</p>
             </Link>
          ))
       }
