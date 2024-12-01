@@ -1,16 +1,74 @@
-import React, { useState } from 'react'
+import React, { useContext, useEffect, useState } from 'react'
+import { AppContext } from '../context/AppContext'
+import { toast } from 'react-toastify'
+import axios from 'axios'
+import { useNavigate } from 'react-router-dom'
 
 const LoginForm = () => {
+
+   const {token,setToken,backendUrl} = useContext(AppContext)
+   const navigate = useNavigate()
    
    const [state, setState] = useState('sign-up')
    const [email, setEmail] = useState('')
    const [password, setPassword] = useState('')
    const [name, setName] = useState('')
+   
     
 
    const onSubmitHandler = async (event)=>{
       event.preventDefault()
       
+      try {
+         if(state === 'sign-up'){
+            if(!name){
+               return toast.error("Please enter the name.")
+            }else if(!email){
+               return toast.error("Please enter the email.")
+            }else if(!password){
+               return toast.error("Please enter the password.")
+            }
+            const {data} = await axios.post(backendUrl + '/api/user/register',{name,password,email}) 
+
+            if(data.success){
+               toast.success(data.message);
+               navigate('/login')
+               
+
+            }else{
+               toast.error(data.message)
+            }
+
+         }else{
+
+            if (!email) {
+               return toast.error("Please enter the email.")
+            } else if (!password) {
+               return toast.error("Please enter the password.")
+            }
+
+            const { data } = await axios.post(backendUrl + '/api/user/login', {email,password },{headers:{token}})
+
+            if (data.success) {
+               toast.success(data.message);
+               navigate('/')
+               localStorage.setItem('token', data.token)
+               setToken(data.token)
+
+            } else {
+               toast.error(data.message)
+            }
+         }
+
+      } catch (error) {
+         console.error("Error in form submission:", error);
+
+         const errorMessage =
+            error.response && error.response.data && error.response.data.message
+               ? error.response.data.message
+               : "Something went wrong. Please try again.";
+         toast.error(errorMessage);
+      }
 
    }
 
@@ -21,25 +79,25 @@ const LoginForm = () => {
         <div className='mt-4 max-sm:text-left'>
         {
               state === "sign-up" && <div className='flex flex-col'>
-                 <label className='text-lg font-medium'>Name</label>
+                 <label className='text-lg font-medium' htmlFor='name'>Name</label>
                  <input
                     className='w-full border-2 border-gray-100 rounded-xl p-2 mt-1 bg-transparent'
-                    placeholder="Enter your name" type='text' onChange={(e) => setName(e.target.value)} value={name} required/>
+                    placeholder="Enter your name" type='text' onChange={(e) => setName(e.target.value)} value={name} required id='name'/>
               </div> 
         }
            <div className='flex flex-col'>
-              <label className='text-lg font-medium'>Email</label>
+              <label className='text-lg font-medium' htmlFor='email' >Email</label>
               <input
                  className='w-full border-2 border-gray-100 rounded-xl p-2 mt-1 bg-transparent'
-                 placeholder="Enter your email" type='email' onChange={(e) => setEmail(e.target.value)} value={email} required />
+                 placeholder="Enter your email" type='email' onChange={(e) => setEmail(e.target.value)} value={email} required id='email'/>
            </div>
            <div className='flex flex-col mt-4'>
-              <label className='text-lg font-medium'>Password</label>
+              <label className='text-lg font-medium' htmlFor='password'>Password</label>
               <input
                  className='w-full border-2 border-gray-100 rounded-xl p-2 mt-1 bg-transparent'
                  placeholder="Enter your password"
                  type='password'
-                 onChange={(e) => setPassword(e.target.value)} value={password} required
+                 onChange={(e) => setPassword(e.target.value)} value={password} required id='password'
               />
            </div>
            {state === 'sign-up' ? '' : <div className='mt-4 flex justify-between items-center max-sm:flex-col'>
@@ -53,10 +111,10 @@ const LoginForm = () => {
            }
            {
               state === 'sign-up' ? <div className='mt-4 flex flex-col gap-y-4'>
-                 <button className='active:scale-[.98] active:duration-75 transition-all hover:scale-[1.01]  ease-in-out transform py-2 bg-violet-500 rounded-xl text-white font-bold text-lg'>Sign Up</button>
+                 <button className='active:scale-[.98] active:duration-75 transition-all hover:scale-[1.01]  ease-in-out transform py-2 bg-violet-500 rounded-xl text-white font-bold text-lg' onClick={onSubmitHandler} >Sign Up</button>
               </div>  :
                  <div className='mt-4 flex flex-col gap-y-4'>
-                    <button className='active:scale-[.98] active:duration-75 transition-all hover:scale-[1.01]  ease-in-out transform py-2 bg-violet-500 rounded-xl text-white font-bold text-lg'>Sign in</button>
+                    <button className='active:scale-[.98] active:duration-75 transition-all hover:scale-[1.01]  ease-in-out transform py-2 bg-violet-500 rounded-xl text-white font-bold text-lg' onClick={onSubmitHandler}>Sign in</button>
                     <button
                        className='flex items-center justify-center gap-2 active:scale-[.98] active:duration-75 transition-all hover:scale-[1.01]  ease-in-out transform py-2  rounded-xl text-gray-700 font-semibold text-lg border-2 border-gray-100 '>
                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">

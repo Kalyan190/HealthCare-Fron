@@ -8,12 +8,10 @@ const AppContextProvider = (props) =>{
    const currencySymbol = "$"
    const backendUrl = import.meta.env.VITE_BACKEND_URL
    const [doctors,setDoctors] = useState([])
+   const [token, setToken] = useState(localStorage.getItem('token') ? localStorage.getItem('token'):false)
    
-   const value = {
-      doctors,
-      currencySymbol
-   }
-
+   console.log("Login: ", token)
+   
    const getAllDoctorsData = async ()=>{
       try {
          const {data} = await axios.get(backendUrl + '/api/doctor/list')
@@ -30,6 +28,15 @@ const AppContextProvider = (props) =>{
          
       }
    }
+
+   const value = {
+      doctors,
+      currencySymbol,
+      token,
+      setToken,
+      backendUrl
+   }
+
 
    useEffect(()=>{
        getAllDoctorsData()
