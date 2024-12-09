@@ -4,10 +4,11 @@ import { toast } from 'react-toastify'
 import axios from 'axios'
 import { useNavigate } from 'react-router-dom'
 import { DotLottieReact } from '@lottiefiles/dotlottie-react';
+import { Loader } from 'lucide-react';
 
 const Login = () => {
 
-   const { token, setToken, backendUrl } = useContext(AppContext)
+   const { token, setToken, backendUrl,loading,setLoading } = useContext(AppContext)
    const navigate = useNavigate()
 
    const [email, setEmail] = useState('')
@@ -17,7 +18,8 @@ const Login = () => {
       event.preventDefault()
 
       try {
-
+         
+         setLoading(true)
          if (!email) {
             return toast.error("Please enter the email.")
          } else if (!password) {
@@ -44,12 +46,20 @@ const Login = () => {
                ? error.response.data.message
                : "Something went wrong. Please try again.";
          toast.error(errorMessage);
+      }finally{
+         setLoading(false)
       }
 
    }
 
    return (
-      <div className='flex w-full'>
+      <>
+         {loading && (
+            <div className="fixed inset-0 flex items-center justify-center bg-gray-100 bg-opacity-75 z-50">
+               <Loader className="animate-spin text-primary w-16 h-16" />
+            </div>
+         )}
+      <div className={`flex w-full ${loading ? 'opacity-45':''}`}>
          <div className='hidden lg:flex h-[80vh] w-1/2 items-center justify-center relative'>
             <DotLottieReact
                src="https://lottie.host/298372bb-21da-4d35-afb2-e88e94606887/iMeptCpU8z.lottie"
@@ -103,7 +113,7 @@ const Login = () => {
 
 
 
-                  <div className='mt-4 flex justify-center items-center'>
+                  <div className='mt-4 flex max-sm:flex-col justify-center items-center'>
                      <p className='font-medium text-base'>Don't have an account?</p>
                      <button
                         className='ml-2 font-medium text-base text-violet-500' onClick={() => {
@@ -116,6 +126,7 @@ const Login = () => {
          </div>
 
       </div>
+      </>
    )
 
 }

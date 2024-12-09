@@ -4,10 +4,11 @@ import { toast } from 'react-toastify'
 import axios from 'axios'
 import { useNavigate } from 'react-router-dom'
 import { DotLottieReact } from '@lottiefiles/dotlottie-react';
+import { Loader } from 'lucide-react';
 
 const SignUp = () => {
 
-   const { token, setToken, backendUrl } = useContext(AppContext)
+   const { loading, setLoading, backendUrl } = useContext(AppContext)
    const navigate = useNavigate()
 
    const [email, setEmail] = useState('')
@@ -20,7 +21,7 @@ const SignUp = () => {
       event.preventDefault()
 
       try {
-
+         setLoading(true)
          if (!name) {
             return toast.error("Please enter the name.")
          } else if (!email) {
@@ -46,6 +47,8 @@ const SignUp = () => {
                ? error.response.data.message
                : "Something went wrong. Please try again.";
          toast.error(errorMessage);
+      }finally{
+         setLoading(false)
       }
 
 
@@ -53,7 +56,13 @@ const SignUp = () => {
    }
 
    return (
-      <div className='flex w-full'>
+      <>
+         {loading && (
+            <div className="fixed inset-0 flex items-center justify-center bg-gray-100 bg-opacity-75 z-50">
+               <Loader className="animate-spin text-primary w-16 h-16" />
+            </div>
+         )}
+      <div className={`flex w-full ${loading ? 'opacity-45':''}`}>
          <div className='hidden lg:flex h-[80vh] w-1/2 items-center justify-center relative'>
             <DotLottieReact
                src="https://lottie.host/298372bb-21da-4d35-afb2-e88e94606887/iMeptCpU8z.lottie"
@@ -94,7 +103,7 @@ const SignUp = () => {
 
                   <div className='mt-4 flex flex-col gap-y-4'>
                      <button className='active:scale-[.98] active:duration-75 transition-all hover:scale-[1.01]  ease-in-out transform py-2 bg-violet-500 rounded-xl text-white font-bold text-lg' onClick={onSubmitHandler}  >Sign Up</button>
-                  </div> :
+                  </div> 
 
 
                   <div className=' flex justify-center items-center max-sm:flex-col '>
@@ -109,7 +118,7 @@ const SignUp = () => {
          </div>
 
       </div>
-
+      </>
    )
 }
 
