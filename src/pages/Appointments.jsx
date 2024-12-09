@@ -5,12 +5,13 @@ import { assets } from '../assets/assets_frontend/assets'
 import RealtedDoctors from '../components/RealtedDoctors'
 import { toast } from 'react-toastify'
 import axios from 'axios'
+import { Loader } from 'lucide-react';
 
 const Appointments = () => {
    const { docId } = useParams()
    //  console.log(docId)
 
-   const { doctors, currencySymbol, backendUrl, token, getAllDoctorsData } = useContext(AppContext);
+   const { doctors, currencySymbol, backendUrl, token, getAllDoctorsData ,loading,setLoading} = useContext(AppContext);
    const [docInfo, setDocInfo] = useState(null);
    const navigate = useNavigate()
 
@@ -91,6 +92,8 @@ const Appointments = () => {
       }
 
       try {
+         setLoading(true)
+
          
         const date = docSlots[slotIndex][0].datetime;
 
@@ -118,6 +121,8 @@ const Appointments = () => {
             toast.error("An unexpected error occurred. Please try again.");
          }
          console.error(error);
+      }finally{
+         setLoading(false)
       }
    }
 
@@ -137,8 +142,16 @@ const Appointments = () => {
 
    
 
-   return docInfo && (
-      <div>
+   return ( <> 
+
+      {loading && (
+         <div className="fixed inset-0 flex items-center justify-center bg-gray-100 bg-opacity-75 z-50">
+            <Loader className="animate-spin text-primary w-16 h-16" />
+         </div>
+      )}
+      
+      {docInfo && (
+         <div className={`${loading ? 'opacity-45' : ''}`}>
          <div className='flex flex-col sm:flex-row gap-4 '>
             {/*---- doctor Details*/}
             <div>
@@ -188,7 +201,9 @@ const Appointments = () => {
          {/*----Listing related doctors  ---------*/}
          <RealtedDoctors docId={docId} speciality={docInfo.speciality}/>
       </div>
-   )
+   )}
+   </>
+  )
 }
 
 export default Appointments

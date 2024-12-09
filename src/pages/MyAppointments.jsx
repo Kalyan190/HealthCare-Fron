@@ -2,10 +2,11 @@ import React, { useContext, useEffect, useState } from 'react'
 import {AppContext} from '../context/AppContext'
 import axios from 'axios'
 import { toast } from 'react-toastify'
+import { Loader } from 'lucide-react';
 
 const MyAppointments = () => {
-   const { backendUrl, token, getAllDoctorsData } = useContext(AppContext)
-  console.log(backendUrl)
+   const { backendUrl, token, getAllDoctorsData,loading,setLoading } = useContext(AppContext)
+//   console.log(backendUrl)
   const [appointments,setAppointments] = useState([])
 
   const months = ["","Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"]
@@ -16,6 +17,7 @@ const MyAppointments = () => {
 
   const getUserAppointment = async ()=>{
    try {
+      setLoading(true)
       const {data} = await axios.get(backendUrl + '/api/user/appointments',{headers:{token}})
       if(data.success){
          setAppointments(data.appointments.reverse())
@@ -24,11 +26,14 @@ const MyAppointments = () => {
    } catch (error) {
       console.error(error)
       toast.error(error.message);
+   }finally{
+      setLoading(false)
    }
   }
 
   const cancelAppointments = async(appointmentId)=>{
        try {
+         setLoading(true)
          // console.log(appointmentId)
           const { data } = await axios.post(backendUrl + '/api/user/cancel-appointment',{appointmentId},{headers:{token}})
 
@@ -44,6 +49,8 @@ const MyAppointments = () => {
        } catch (error) {
           console.error(error)
           toast.error(error.message);
+       }finally{
+         setLoading(false)
        }
   }
 //   const appointmentRazorPay = async(appointmentId)=>{
@@ -69,7 +76,14 @@ const MyAppointments = () => {
 
 
   return (
-    <div>
+   <>
+        {loading && (
+           <div className="fixed inset-0 flex items-center justify-center bg-gray-100 bg-opacity-75 z-50">
+              <Loader className="animate-spin text-primary w-16 h-16" />
+           </div>
+        )}
+
+        <div className={`${loading ? 'opacity-45' : ''}`}>
       <p className='pb-3 font-medium text-zinc-700 border-b'>My appointments</p>
       <div>
       {
@@ -103,6 +117,7 @@ const MyAppointments = () => {
       }
       </div>
     </div>
+     </>
   )
 }
 
