@@ -17,7 +17,7 @@ const Navbar = () => {
       setToken(false);
       localStorage.removeItem('token')
    }
-   console.log("token: ",token)
+   // console.log("token: ",token)
 
    return (
       <div className='flex items-center justify-between text-sm py-4 mb-5 border-gray-400 border-b'>
