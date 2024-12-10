@@ -1,11 +1,12 @@
 import React, { useContext, useState, useEffect } from 'react'
 import { useNavigate, useParams } from 'react-router-dom'
 import { AppContext } from '../context/AppContext';
+import { Loader } from 'lucide-react';
 
 
 const Doctor = () => {
    const { speciality } = useParams()
-   const { doctors } = useContext(AppContext)
+   const { doctors,loading } = useContext(AppContext)
    const [filterDoc, setFilterDoc] = useState([]);
    const [showFilter,setShowFilter] = useState(false)
    const navigate = useNavigate()
@@ -22,6 +23,7 @@ const Doctor = () => {
    }, [doctors, speciality])
 
    return (
+      <>
       <div>
          <p className='text-gray-600'>Browse through the doctors specialist.</p>
          <div className='flex flex-col sm:flex-row items-start gap-5 mt-5'>
@@ -36,9 +38,15 @@ const Doctor = () => {
                <p onClick={() => speciality === 'Gastroenterologist' ? navigate('/doctors') : navigate('/doctors/Gastroenterologist')} className={`w-[94vw] sm:w-auto pl-3 py-1.5 pr-16 border border-gray-300 rounded transition-all cursor-pointer ${speciality === "Gastroenterologist" ? "bg-indigo-100 text-black" : "" }`}>Gastroenterologist</p>
             </div>
             <div className='w-full grid grid-cols-auto gap-4 gap-y-6'>
-               {
+                  {loading && (
+                     <div className="fixed inset-0 flex items-center justify-center bg-gray-100 bg-opacity-75 z-50">
+                        <Loader className="animate-spin text-primary w-16 h-16" />
+                     </div>
+                  )}
+            
+            {
                   filterDoc.map((item, index) => (
-                     <div className='border border-b-blue-200 rounded-xl overflow-hidden cursor-pointer hover:translate-y-[-10px]  transition-all duration-500' key={index} onClick={() => navigate(`/appointment/${item._id}`)}>
+                     <div className={`border border-b-blue-200 rounded-xl overflow-hidden cursor-pointer hover:translate-y-[-10px]  transition-all duration-500 ${loading ? 'opacity-45':''}`} key={index} onClick={() => navigate(`/appointment/${item._id}`)}>
                         <img className='bg-blue-50' src={item.image} alt="error" />
                         <div className='p-4'>
                            <div className={`flex items-center gap-2 text-sm text-center ${item.avilability ? 'text-green-500' : 'text-gray-500'}`}>
@@ -54,6 +62,7 @@ const Doctor = () => {
             </div>
          </div>
       </div>
+      </>
    )
 }
 
