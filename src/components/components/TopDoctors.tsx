@@ -40,7 +40,7 @@ const TopDoctors = () => {
                 onClick={() => handleDoctorClick(doctor._id)}
                 className="group relative bg-white rounded-xl overflow-hidden shadow-sm border border-gray-200 hover:shadow-md transition-all duration-300 cursor-pointer"
               >
-                <div className="aspect-[3/4] overflow-hidden">
+                <div className="overflow-hidden">
                   <img
                     src={doctor.image || "/placeholder.svg"}
                     alt={doctor.name}

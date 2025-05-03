@@ -44,12 +44,14 @@ const Login = () => {
 
   return (
     <>
-      {loading && (
-        <div className="fixed inset-0 flex items-center justify-center bg-gray-100 bg-opacity-75 z-50">
-          <Loader className="animate-spin text-primary w-16 h-16" />
-        </div>
-      )}
-      <div className={`flex w-full ${loading ? 'opacity-45' : ''}`}>
+      
+      <div className={`flex w-full ${loading ? 'opacity-85' : ''}`}>
+           {loading && (
+              <div className="fixed inset-0 flex items-center justify-center bg-gray-100 bg-opacity-75 z-50">
+                 <Loader className="animate-spin text-primary w-16 h-16" />
+              </div>
+           )}
+
         <div className="hidden lg:flex h-[80vh] w-1/2 items-center justify-center relative">
           <DotLottieReact
             src="https://lottie.host/298372bb-21da-4d35-afb2-e88e94606887/iMeptCpU8z.lottie"
@@ -59,8 +61,8 @@ const Login = () => {
         </div>
         <div className="w-full flex items-center justify-center lg:w-1/2">
           <div className="w-11/12 max-w-[600px] px-10 py-3 max-sm:px-4 rounded-3xl bg-white border-2 border-gray-100 max-sm:text-center">
-            <h1 className="text-5xl max-sm:text-3xl font-semibold">Welcome Back</h1>
-            <p className="font-medium text-lg text-gray-500 mt-4">Welcome back! Please enter your details.</p>
+            <h1 className="text-5xl max-sm:text-2xl font-semibold">Welcome Back</h1>
+            <p className="sm:font-medium sm:text-lg text-sm text-gray-500 mt-4">Welcome back! Please enter your details.</p>
             <div className="mt-4 max-sm:text-left">
               <div className="flex flex-col">
                 <label className="text-lg font-medium" htmlFor="email">Email</label>
